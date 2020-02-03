@@ -4,10 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
+////A function that takes any get component situation and makes a list of those components and lets functions access that list from now on instead of using get component
 //The program is slow because it reads the whole procedure list everytime, maybe sorting it would let us make some assumptions and ony search from the first in each group?
 
 public class MainScript : MonoBehaviour
 {
+    public static MainScript TheMainScript;
 
     [SerializeField] TMP_Dropdown PatientDropdown;
     [SerializeField] public TMP_Text PatientDropdownText;
@@ -45,13 +48,17 @@ public class MainScript : MonoBehaviour
     }
     public class Procedure
     {
-        public bool PRP;
-        public bool AUoF;
-        public bool Fly;
+        public bool PRP = false;
+        public bool AUoF = false;
+        public bool Fly = false;
+
+        public bool MedHistoryUpdated = false;
 
         //FUTURE FEATURE the latest radiographs already entered are under the patient class
         //pano, bw, per and their dates
         public List<string> Radiographs;
+
+        //If I say a finding, how will I say I took a radiograph? [an optional dropdown of the three radiograph
 
         public List<RadiographicFindings> RadiographicFindingsList = new List<RadiographicFindings>();
 
@@ -84,6 +91,22 @@ public class MainScript : MonoBehaviour
             public string Description;
             public int DiagnosisID;
         }
+
+        //public class treatment
+        //tooth number and prep and restorative materials (can I decide the order? BUT it has an auto order that it thinks it should go in)
+
+        //ToothNumber (some of the tx are probably multiple teeth like FDP and sc/RP)
+        //anesthetic (was there anesthetic from another procedure? then leave out "No anesthetic" string
+        //rubber dam
+        //prep
+        //cord
+        //impression
+        //materials
+        //failed?
+
+
+        //_verified +occlusion and +contacts (things like this will not need to be repeated if multiple are true)
+        //post instructions
 
     }
 
@@ -269,8 +292,30 @@ public class MainScript : MonoBehaviour
         UpdateProcedureListDisplay();
     }
 
+    [SerializeField] public List<GameObject> PlaceholderTemplates = new List<GameObject>();
+    [SerializeField] public List<RectTransform> PlaceholderTemplateRectTransforms = new List<RectTransform>();
+    [SerializeField] public List<float> PlaceholderTemplateHeights = new List<float>();
+    
+
+    public void RegisterPlaceholderTemplateToAllLists()
+    {
+
+        PlaceholderTemplates[PlaceholderTemplates.Count - 1].GetComponent<DownMover>().ThisPlaceholderID = PlaceholderTemplates.Count - 1;
+        PlaceholderTemplateRectTransforms[PlaceholderTemplates.Count-1] = PlaceholderTemplates[PlaceholderTemplates.Count - 1].GetComponent<RectTransform>();
+        PlaceholderTemplateHeights[PlaceholderTemplates.Count - 1] = PlaceholderTemplateRectTransforms[PlaceholderTemplates.Count - 1].rect.height;
+        
+    }
+
+
+    public float GetAmountToMoveElementsDown(int PlaceholderTemplateIndexNumber)
+    {
+        return PlaceholderTemplates[PlaceholderTemplateIndexNumber].GetComponent<RectTransform>().rect.height;
+    }
+
+
     void Start()
     {
+        TheMainScript = this;
         Screen.orientation = ScreenOrientation.Portrait;
          
 
