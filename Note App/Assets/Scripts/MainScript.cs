@@ -10,7 +10,7 @@ using TMPro;
 
 public class MainScript : MonoBehaviour
 {
-    public static MainScript TheMainScript;
+    public static MainScript TheMainScript { get; set; }
 
     [SerializeField] TMP_Dropdown PatientDropdown;
     [SerializeField] public TMP_Text PatientDropdownText;
@@ -299,10 +299,10 @@ public class MainScript : MonoBehaviour
 
     public void RegisterPlaceholderTemplateToAllLists()
     {
-
-        PlaceholderTemplates[PlaceholderTemplates.Count - 1].GetComponent<DownMover>().ThisPlaceholderID = PlaceholderTemplates.Count - 1;
-        PlaceholderTemplateRectTransforms[PlaceholderTemplates.Count-1] = PlaceholderTemplates[PlaceholderTemplates.Count - 1].GetComponent<RectTransform>();
-        PlaceholderTemplateHeights[PlaceholderTemplates.Count - 1] = PlaceholderTemplateRectTransforms[PlaceholderTemplates.Count - 1].rect.height;
+        Debug.Log(PlaceholderTemplates.Count - 1);
+        PlaceholderTemplates[PlaceholderTemplates.Count - 1].transform.parent.GetComponent<DownMover>().ThisPlaceholderID = PlaceholderTemplates.Count - 1;
+        PlaceholderTemplateRectTransforms.Add(PlaceholderTemplates[PlaceholderTemplates.Count - 1].GetComponent<RectTransform>());
+        PlaceholderTemplateHeights.Add(PlaceholderTemplateRectTransforms[PlaceholderTemplates.Count - 1].rect.height);
         
     }
 
@@ -311,6 +311,13 @@ public class MainScript : MonoBehaviour
     {
         return PlaceholderTemplates[PlaceholderTemplateIndexNumber].GetComponent<RectTransform>().rect.height;
     }
+
+
+    //Tx: Exams, A, B, C
+    //Dx: dxA, dxB, dxC
+    //Re: Comp exam (If not, then limited in first pt note... maybe I'll just check boxes to decide)
+    //Prior to initiating
+    //
 
 
     void Start()
